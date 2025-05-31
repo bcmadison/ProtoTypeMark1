@@ -46,11 +46,9 @@ class ErrorLogger {
     window.fetch = async (...args) => {
       const start = Date.now();
       const [url, options = {}] = args;
-ECHO is off.
       try {
         const response = await originalFetch(...args);
         const duration = Date.now() - start;
-ECHO is off.
         this.logApiCall({
           url,
           method: options.method || 'GET',
@@ -60,7 +58,6 @@ ECHO is off.
           timestamp: new Date().toISOString(),
           ok: response.ok
         });
-ECHO is off.
         if (!response.ok) {
           this.logError({
             type: 'api-error',
@@ -70,7 +67,6 @@ ECHO is off.
             timestamp: new Date().toISOString()
           });
         }
-ECHO is off.
         return response;
       } catch (error) {
         this.logError({
@@ -86,7 +82,6 @@ ECHO is off.
 
   logError(error) {
     this.errors.push(error);
-ECHO is off.
     // Store in localStorage
     try {
       const stored = JSON.parse(localStorage.getItem('app_errors') || '[]');
@@ -101,7 +96,6 @@ ECHO is off.
 
   logApiCall(call) {
     this.apiCalls.push(call);
-ECHO is off.
     // Store in localStorage
     try {
       const stored = JSON.parse(localStorage.getItem('app_api_calls') || '[]');
@@ -126,7 +120,6 @@ ECHO is off.
         apiCalls: JSON.parse(localStorage.getItem('app_api_calls') || '[]')
       }
     };
-ECHO is off.
     return report;
   }
 

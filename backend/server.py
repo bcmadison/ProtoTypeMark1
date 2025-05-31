@@ -1,4 +1,9 @@
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+import sys
+sys.path.append('core')
+from auto_logger import logger
+logger.logger.info("Backend server starting...")
+
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import logging
@@ -6,6 +11,9 @@ from datetime import datetime
 import pandas as pd
 import os
 from dotenv import load_dotenv
+from pathlib import Path
+import json
+from typing import Any, Dict
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
 
@@ -86,3 +94,30 @@ async def websocket_scores(websocket: WebSocket):
             await websocket.send_text(f"Echo: {data}")
     except WebSocketDisconnect:
         logger.info("Client disconnected")
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    # Use the global logger from auto_logger
+    import core.auto_logger
+    core.auto_logger.logger.logger.error(f"Unhandled exception: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error", "error": str(exc)}
+    )
+
+@app.post("/api/logs/export")
+async def receive_frontend_logs(log_data: Dict[str, Any]) -> Any:
+    """Receive and store frontend logs from the frontend app."""
+    try:
+        import core.auto_logger
+        core.auto_logger.logger.logger.info(f"Received frontend logs for session: {log_data.get('sessionId', 'unknown')}")
+        frontend_log_dir = Path("logs/frontend")
+        frontend_log_dir.mkdir(parents=True, exist_ok=True)
+        log_file = frontend_log_dir / f"frontend_{log_data.get('sessionId', 'unknown')}.json"
+        with open(log_file, "w", encoding="utf-8") as f:
+            json.dump(log_data, f, indent=2)
+        return {"status": "success", "message": "Frontend logs saved."}
+    except Exception as e:
+        import core.auto_logger
+        core.auto_logger.logger.logger.error(f"Failed to save frontend logs: {e}", exc_info=True)
+        return JSONResponse(status_code=500, content={"detail": "Failed to save frontend logs."})
