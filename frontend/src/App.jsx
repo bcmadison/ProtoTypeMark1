@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import './errorLogger.js';
 import AppRoutes from './routes/AppRoutes';
 import ToggleSidebar from './components/ToggleSidebar';
 import FooterVersion from './components/FooterVersion';
