@@ -1,0 +1,10 @@
+# backend/requirements.txt
+fastapi
+uvicorn
+pandas
+numpy
+scikit-learn
+# skopt
+joblib
+python-multipart
+httpx

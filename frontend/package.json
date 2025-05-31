@@ -1,0 +1,27 @@
+{
+  "name": "ai-sports-betting",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.5.0",
+    "autoprefixer": "^10.4.21",
+    "axios": "^1.9.0",
+    "framer-motion": "^10.16.1",
+    "postcss": "^8.5.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^6.0.0",
+    "react-router-dom": "^6.22.3",
+    "recharts": "^2.7.2",
+    "tailwindcss": "^4.1.8"
+  },
+  "devDependencies": {
+    "electron": "^36.3.2",
+    "vite": "^6.3.5"
+  }
+}
